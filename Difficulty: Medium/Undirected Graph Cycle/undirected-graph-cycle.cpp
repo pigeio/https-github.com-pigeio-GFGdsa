@@ -7,23 +7,31 @@ using namespace std;
 
 class Solution {
   public:
-    bool isCycleDFS(vector<vector<int>>& adj,int u , vector<bool>&visited ,int parent){
-        visited[u] = true; //mark visited to the first node
-      
-        for(int v :adj[u]){
-           if(v == parent) continue;
-          
-           if(visited[v]) //agar visited hai toh cycle v hoga
-           return true;
+    bool isCycleBFS(vector<vector<int>>& adj,int u , vector<bool>&visited){
+       queue<pair<int, int>>que;
+       
+       que.push({u,  -1});
+       visited[u] = true; // that means it is visited
+       
+       while(!que.empty()){
+           pair<int , int> p = que.front();
+           que.pop();
            
-           // agar if conditions sahi nhi hai toh aage jakr check karenge or agar aage-
-           //-jakr cycle bna liya toh true return karenge
+           int source = p.first;
+           int parent = p.second;
            
-           if(isCycleDFS(adj,v,visited,u)){ //aage jakr agar wo cycle bna de toh 
-               return true;
+           for(int &v : adj[source]){
+               if(visited[v] == false){ //agar visited nhi hai toh visit karenge
+                   visited[v] = true;
+                   que.push({v , source});
+               }else if(v != parent){ // agar wo parent ke equal nhi hai toh wo cycle hoi
+                   return true;
+               }else{
+                   
+               }
            }
-            
-        }return false;
+       }return false;
+       
     }
     // Function to detect cycle in an undirected graph.
     bool isCycle(vector<vector<int>>& adj) {
@@ -34,7 +42,7 @@ class Solution {
         for(int i=0;i<v;i++){
             
             
-            if(!visited[i] && isCycleDFS(adj,i,visited,-1)){
+            if(!visited[i] && isCycleBFS(adj,i,visited)){
                 return true;
             }
         }
